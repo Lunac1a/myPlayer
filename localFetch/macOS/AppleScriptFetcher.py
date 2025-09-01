@@ -27,7 +27,6 @@ def get_qqmusic_now_playing():
     result = subprocess.run(['osascript', '-e', apple_script], capture_output=True, text=True)
     return result.stdout.strip()
 
-# 实时刷新显示
 try:
     while True:
         info = get_qqmusic_now_playing()
