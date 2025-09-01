@@ -2,21 +2,21 @@ import sys
 import platform
 from threading import Thread
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QProgressBar
+    QWidget, QLabel, QVBoxLayout, QHBoxLayout
 )
-from PyQt6.QtGui import QPixmap, QImage
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, QTimer
 import requests
 
 if platform.system() == "Windows":
-    from infoFetch.Windows.fetcher import get_current_track, start_fetcher
+    from infoFetch.Windows.fetcher import get_current_track
 elif platform.system() == "Darwin":  # macOS
-    from infoFetch.macOS.fetcher import get_current_track, start_fetcher
+    from infoFetch.macOS.fetcher import get_current_track
 
 class MusicPlayerUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("QQ音乐实时播放")
+        self.setWindowTitle("My Player")
         self.setGeometry(300, 300, 400, 200)
 
         # 封面
@@ -98,11 +98,4 @@ class MusicPlayerUI(QWidget):
 
         Thread(target=download, daemon=True).start()
 
-if __name__ == "__main__":
-    # 启动 fetcher 后台线程
-    start_fetcher()
 
-    app = QApplication(sys.argv)
-    player_ui = MusicPlayerUI()
-    player_ui.show()
-    sys.exit(app.exec())
