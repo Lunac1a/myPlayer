@@ -73,7 +73,7 @@ def get_track_info(now_playing_text):
 
     # 封面 URL
     album_mid = song_json.get("albummid")
-    cover_url = f"https://y.qq.com/music/photo_new/T002R800x800M000{album_mid}_1.jpg" if album_mid else "default_cover.png"
+    cover_url = f"https://y.qq.com/music/photo_new/T002R300x300M000{album_mid}_1.jpg" if album_mid else "default_cover.png"
 
     track_data = {
         "title": song_json.get("songname"),
