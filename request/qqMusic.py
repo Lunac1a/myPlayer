@@ -19,7 +19,7 @@ def qq_music_search(title, artist=None):
     使用 QQ 音乐搜索接口，返回 JSON 的歌曲信息
     """
     keyword = f"{title} {artist}"
-    url = f"http://c.y.qq.com/soso/fcgi-bin/client_search_cp?w={keyword}&p=1&n=10&cr=1"
+    url = f"http://c.y.qq.com/soso/fcgi-bin/client_search_cp?w={keyword}&p=1&n=5&cr=1"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
         "Accept": "*/*",
@@ -73,7 +73,7 @@ def get_track_info(now_playing_text):
 
     # 封面 URL
     album_mid = song_json.get("albummid")
-    cover_url = f"https://y.qq.com/music/photo_new/T002R500x500M000{album_mid}_1.jpg" if album_mid else "default_cover.png"
+    cover_url = f"https://y.qq.com/music/photo_new/T002R800x800M000{album_mid}_1.jpg" if album_mid else "default_cover.png"
 
     track_data = {
         "title": song_json.get("songname"),
