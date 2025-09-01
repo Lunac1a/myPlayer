@@ -14,11 +14,12 @@ def parse_now_playing(text):
         return title, artist
     return None, None
 
-def qq_music_search(keyword, artist=None):
+def qq_music_search(title, artist=None):
     """
     使用 QQ 音乐搜索接口，返回 JSON 的歌曲信息
     """
-    url = f"http://c.y.qq.com/soso/fcgi-bin/client_search_cp?w={keyword}-{artist}&p=1&n=5&cr=1"
+    keyword = f"{title} {artist}"
+    url = f"http://c.y.qq.com/soso/fcgi-bin/client_search_cp?w={keyword}&p=1&n=10&cr=1"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
         "Accept": "*/*",
@@ -28,11 +29,10 @@ def qq_music_search(keyword, artist=None):
 
     try:
         resp = requests.get(url, headers=headers, timeout=10)
+        resp_text = resp.text.strip()
     except requests.RequestException as e:
         print("请求失败:", e)
         return None
-
-    resp_text = resp.text.strip()
 
     # 去掉 callback() 包裹
     if resp_text.startswith("callback(") and resp_text.endswith(")"):
@@ -50,12 +50,14 @@ def qq_music_search(keyword, artist=None):
     if not songs:
         return None
 
-    # 匹配歌手优先
-    if artist:
-        for song in songs:
-            singers = [s.get("name") for s in song.get("singer", [])]
-            if any(artist.lower() in s.lower() for s in singers):
-                return song
+    # 精确匹配：先匹配歌名 + 歌手
+    title_clean = title.lower().replace(" ", "")
+    artist_clean = artist.lower().replace(" ", "")
+    for song in songs:
+        song_title = song.get("songname", "").lower().replace(" ", "")
+        singers = [s.get("name", "").lower().replace(" ", "") for s in song.get("singer", [])]
+        if song_title == title_clean and any(artist_clean in s for s in singers):
+            return song
 
     # 如果没有完全匹配，则返回第一首
     return songs[0]
@@ -70,8 +72,8 @@ def get_track_info(now_playing_text):
         return None
 
     # 封面 URL
-    album_id = song_json.get("albummid")
-    cover_url = f"https://y.qq.com/music/photo_new/T002R500x500M000{album_id}_1.jpg"
+    album_mid = song_json.get("albummid")
+    cover_url = f"https://y.qq.com/music/photo_new/T002R500x500M000{album_mid}_1.jpg" if album_mid else "default_cover.png"
 
     track_data = {
         "title": song_json.get("songname"),
