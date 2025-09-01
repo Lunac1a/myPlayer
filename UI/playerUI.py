@@ -15,8 +15,6 @@ if platform.system() == "Windows":
         from infoFetch.Windows.qqMusic.fetcher import get_current_track
     elif music_app == "netease":
         from infoFetch.Windows.netease.fetcher import get_current_track
-elif platform.system() == "Darwin":
-    from infoFetch.macOS.fetcher import get_current_track
 
 class MusicPlayerUI(QWidget):
     def __init__(self):

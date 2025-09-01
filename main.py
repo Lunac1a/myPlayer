@@ -12,8 +12,6 @@ if platform.system() == "Windows":
         from infoFetch.Windows.qqMusic.fetcher import start_fetcher
     elif music_app == "netease":
         from infoFetch.Windows.netease.fetcher import start_fetcher
-elif platform.system() == "Darwin":  # macOS
-    from infoFetch.macOS.fetcher import start_fetcher
 
 if __name__ == "__main__":
     # 启动 fetcher 后台线程
