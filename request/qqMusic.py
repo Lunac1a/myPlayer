@@ -56,7 +56,7 @@ def search_qqmusic(keyword, n=5):
 
 # 测试
 if __name__ == "__main__":
-    keyword = "稻香"
+    keyword = "wild"
     results = search_qqmusic(keyword)
     for i, track in enumerate(results, 1):
         print(f"{i}. {track}")
