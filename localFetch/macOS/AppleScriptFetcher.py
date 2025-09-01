@@ -26,11 +26,3 @@ def get_qqmusic_now_playing():
     '''
     result = subprocess.run(['osascript', '-e', apple_script], capture_output=True, text=True)
     return result.stdout.strip()
-
-try:
-    while True:
-        info = get_qqmusic_now_playing()
-        print(f"Now Playing: {info}")
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("Stopped")
