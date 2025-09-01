@@ -1,4 +1,5 @@
 import platform
+from tool.detect import detect_running_music_app
 from PyQt6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QGraphicsDropShadowEffect, QPushButton
 )
@@ -7,11 +8,15 @@ from PyQt6.QtCore import Qt, QTimer
 import requests
 from threading import Thread
 
+music_app = detect_running_music_app()
+
 if platform.system() == "Windows":
-    from infoFetch.Windows.fetcher import get_current_track
+    if music_app == "qq":
+        from infoFetch.Windows.qqMusic.fetcher import get_current_track
+    elif music_app == "netease":
+        from infoFetch.Windows.netease.fetcher import get_current_track
 elif platform.system() == "Darwin":
     from infoFetch.macOS.fetcher import get_current_track
-
 
 class MusicPlayerUI(QWidget):
     def __init__(self):
@@ -107,7 +112,12 @@ class MusicPlayerUI(QWidget):
             self.last_songmid = track['songmid']
             self.title_label.setText(track['title'])
             self.artist_label.setText(track['author'])
-            self.load_cover_async(track['cover'])
+
+            cover_url = track.get('cover')
+            if cover_url:  # 有封面才异步加载
+                self.load_cover_async(cover_url)
+            else:  # 没封面就清空或设置默认
+                self.cover_label.clear()  # 清空
 
     def load_cover_async(self, url):
         """异步下载封面并高质量缩放"""

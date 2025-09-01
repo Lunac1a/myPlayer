@@ -1,8 +1,8 @@
 import time
 import hashlib
 from threading import Thread, Lock
-from request.qqMusic import get_track_info
-from localFetch.Windows.qqMusic.APIFetcher import get_now_playing_title
+from request.netease import get_track_info
+from localFetch.Windows.netease.APIFetcher import get_now_playing_title
 
 _current_track = None
 _lock = Lock()
@@ -19,16 +19,17 @@ def set_current_track(track):
 def _fetch_loop(poll_interval=0.5):
     last_hash = None
     while True:
-        title, artist = get_now_playing_title()
+        title, artist = get_now_playing_title()  # local fetcher 返回播放标题和歌手
         if title:
             song_hash = hashlib.md5(f"{title}-{artist}".encode('utf-8')).hexdigest()
             if song_hash != last_hash:
                 last_hash = song_hash
-                # 调用 qqMusic 获取封面和时长
+                # 调用 Netease request fetcher 获取封面和时长
                 track_info = get_track_info(f"{title} - {artist}")
                 if track_info:
                     set_current_track(track_info)
                 else:
+                    # 如果没有获取到封面，先用基础信息
                     set_current_track({
                         "songmid": song_hash,
                         "title": title,

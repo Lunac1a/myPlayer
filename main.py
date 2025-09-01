@@ -2,11 +2,16 @@ import platform
 import sys
 from PyQt6.QtWidgets import QApplication
 from UI.playerUI import MusicPlayerUI
+from tool.detect import detect_running_music_app
 
+music_app = detect_running_music_app()
 
 # 根据系统选择 fetcher
 if platform.system() == "Windows":
-    from infoFetch.Windows.fetcher import start_fetcher
+    if music_app == "qq":
+        from infoFetch.Windows.qqMusic.fetcher import start_fetcher
+    elif music_app == "netease":
+        from infoFetch.Windows.netease.fetcher import start_fetcher
 elif platform.system() == "Darwin":  # macOS
     from infoFetch.macOS.fetcher import start_fetcher
 
