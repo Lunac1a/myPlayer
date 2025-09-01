@@ -1,16 +1,14 @@
-import sys
 import platform
-from threading import Thread
-from PyQt6.QtWidgets import (
-    QWidget, QLabel, QVBoxLayout, QHBoxLayout
-)
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, QTimer
 import requests
+from threading import Thread
 
+# 导入 fetcher 的 get_current_track
 if platform.system() == "Windows":
     from infoFetch.Windows.fetcher import get_current_track
-elif platform.system() == "Darwin":  # macOS
+elif platform.system() == "Darwin":
     from infoFetch.macOS.fetcher import get_current_track
 
 class MusicPlayerUI(QWidget):
@@ -42,60 +40,47 @@ class MusicPlayerUI(QWidget):
         main_layout = QHBoxLayout()
         main_layout.addWidget(self.cover_label)
         main_layout.addLayout(info_layout)
-
         self.setLayout(main_layout)
 
         # 内部状态
         self.last_songmid = None
-        self.current_time = 0
-        self.track_duration = 1
 
         # 定时器刷新 UI
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_ui)
-        self.timer.start(1000)
+        self.timer.start(200)
 
     def update_ui(self):
         track = get_current_track()
         if not track:
             return
 
-        # 只有歌曲切换才更新文字和封面
+        # 只有切歌才更新信息
         if track['songmid'] != self.last_songmid:
             self.last_songmid = track['songmid']
             self.title_label.setText(track['title'])
             self.artist_label.setText(track['author'])
-            self.track_duration = track.get('duration', 1)
-            self.current_time = 0
-            self.load_cover_async(track['cover'])
+            self.load_cover_async(track['cover'], track['songmid'])
 
-    def load_cover_async(self, url):
+    def load_cover_async(self, url, songmid):
         """异步下载封面并高质量缩放"""
         def download():
             try:
                 resp = requests.get(url, timeout=5)
                 pixmap = QPixmap()
                 pixmap.loadFromData(resp.content)
-
-                # 高 DPI 缩放处理
                 dpi_ratio = 2.0
-                scaled_pixmap = pixmap.scaled(
+                scaled = pixmap.scaled(
                     int(self.cover_label.width() * dpi_ratio),
                     int(self.cover_label.height() * dpi_ratio),
                     Qt.AspectRatioMode.KeepAspectRatio,
                     Qt.TransformationMode.SmoothTransformation
                 )
-                # 设置设备像素比
-                scaled_pixmap.setDevicePixelRatio(dpi_ratio)
-
-                # 更新 QLabel
-                self.cover_label.setPixmap(scaled_pixmap)
-                self.cover_label.setScaledContents(False)
-                self.cover_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-            except Exception as e:
-                print("封面加载失败:", e)
+                scaled.setDevicePixelRatio(dpi_ratio)
+                # 确保切歌期间不会覆盖新封面
+                if songmid == self.last_songmid:
+                    self.cover_label.setPixmap(scaled)
+            except:
+                pass
 
         Thread(target=download, daemon=True).start()
-
-

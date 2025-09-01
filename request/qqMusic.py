@@ -4,7 +4,7 @@ import json
 
 def parse_now_playing(text):
     """
-    解析 AppleScriptFetcher 的输出，返回 title 和 artist
+    解析输出，返回 title 和 artist
     输入格式示例: "Lay By Me - Ruben"
     """
     match = re.match(r"(.+)\s*-\s*(.+)", text)
