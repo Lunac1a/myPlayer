@@ -74,7 +74,7 @@ class MusicPlayerUI(QWidget):
                 pixmap.loadFromData(resp.content)
 
                 # 高 DPI 缩放处理
-                dpi_ratio = 2.0  # 假设 Retina/高 DPI，逻辑尺寸 150x150
+                dpi_ratio = 2.0
                 scaled_pixmap = pixmap.scaled(
                     int(self.cover_label.width() * dpi_ratio),
                     int(self.cover_label.height() * dpi_ratio),
