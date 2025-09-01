@@ -12,7 +12,6 @@ elif platform.system() == "Darwin":  # macOS
 
 if __name__ == "__main__":
     # 启动 fetcher 后台线程
-    # 注意：这里传入获取当前歌曲信息的函数
     start_fetcher()
 
     app = QApplication(sys.argv)
