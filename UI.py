@@ -1,5 +1,5 @@
 import sys
-import time
+import platform
 from threading import Thread
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QProgressBar
@@ -7,7 +7,11 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import Qt, QTimer
 import requests
-from infoFetch.macOS.fetcher import get_current_track, start_fetcher
+
+if platform.system() == "Windows":
+    from infoFetch.Windows.fetcher import get_current_track, start_fetcher
+elif platform.system() == "Darwin":  # macOS
+    from infoFetch.macOS.fetcher import get_current_track, start_fetcher
 
 class MusicPlayerUI(QWidget):
     def __init__(self):

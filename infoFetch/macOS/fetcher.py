@@ -1,7 +1,7 @@
 import time
 from threading import Thread, Lock
 from request.qqMusic import get_track_info
-from localFetch.macOS.AppleScriptFetcher import get_qqmusic_now_playing
+from localFetch.macOS.qqMusic.AppleScriptFetcher import get_qqmusic_now_playing
 
 POLL_INTERVAL = 1  # 每秒查询一次
 _current_track = None
