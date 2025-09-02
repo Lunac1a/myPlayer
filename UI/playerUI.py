@@ -50,10 +50,10 @@ class MusicPlayerUI(QWidget):
         """)
 
         self.title_label = QLabel("歌曲名")
-        self.title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: white; background: transparent;")
+        self.title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: white; background-color: rgba(50, 50, 50, 100);")
         self.title_label.setWordWrap(True)
         self.artist_label = QLabel("歌手")
-        self.artist_label.setStyleSheet("font-size: 14px; color: white; background: transparent;")
+        self.artist_label.setStyleSheet("font-size: 14px; color: white; background-color: rgba(50, 50, 50, 100);")
         self.artist_label.setWordWrap(True)
 
         info_layout = QVBoxLayout()
