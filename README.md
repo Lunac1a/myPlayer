@@ -9,3 +9,4 @@ This player can show the current playing song's detail (Name, Artist, Album Cove
   - Support of macOS
   - A phase of waiting for music app launch
   - Audio Visualization
+  - Support for other music platforms
